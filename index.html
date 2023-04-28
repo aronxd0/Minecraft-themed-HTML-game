@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft game</title>
+</head>
+<body>
+    <style>
+        body {
+            background-image: url(bg.png);
+            background-size: cover;
+            color: white;
+        }
+
+        canvas {
+            border: 3px solid rgb(213,213,213);
+            border-radius: 10px;
+            margin-top: 100px;
+            backdrop-filter: blur(5px);
+            background: transparent;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+    <div class="container">
+        <canvas id="gameCanvas" width="300" height="600"></canvas>
+    </div>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const charImage = new Image();
+        charImage.src = 'character.png';
+        const tntImage = new Image();
+        tntImage.src = 'tnt.png';
+
+        let charX = canvas.width / 2;
+        let charY = canvas.height - 50;
+
+        let tntX = 100;
+        let tntY = 0;
+        let score = 0;
+
+        var left_down = false;
+        var left_up = false;
+        var right_down = false;
+        var right_up = false;
+
+        document.addEventListener('keydown', function(event) {
+            if (event.keyCode == 37) {left_down = true}
+            if (event.keyCode == 37) {left_up = true}
+            if (event.keyCode == 39) {right_down = true}
+            if (event.keyCode == 37) {right_up = true}
+        })
+
+        document.addEventListener('keyup', function(event) {
+            if (event.keyCode == 37) {left_down = false}
+            if (event.keyCode == 37) {left_up = false}
+            if (event.keyCode == 39) {right_down = false}
+            if (event.keyCode == 37) {right_up = false}
+        })
+
+        function gameLoop() {
+            ctx.clearRect(0,0, canvas.width, canvas.height);
+            ctx.drawImage(charImage,charX,charY,50,50);
+            tntY += 3;
+            ctx.drawImage(tntImage,tntX,tntY,50,50);
+
+            if (left_down && charX < canvas.width -50) {charX += 5}
+            if (left_up && charX > 0) {charX -= 5}
+            if (right_down && charX < canvas.width - 50) {charX += 5}
+            if (right_up && charX > 0) {charX -= 5}
+
+            if (tntX < charX + 50 &&
+                tntX + 50 > charX &&
+                tntY < charY + 50 &&
+                tntY + 50 > charY) {
+                    alert('The TNT blew you up :(');
+                    score = 0;
+                }
+
+            if (tntY > canvas.height) {
+                score +=  1;
+                tntX = Math.floor(Math.random()*(canvas.width-70));
+                tntY = 0;
+            }
+
+            if (score > 5) {
+                tntY += 1;
+            }
+            if (score > 10) {
+                tntY += 1;
+            }
+            if (score > 15) {
+                tntY += 1;
+            }
+            if (score > 20) {
+                tntY += 1;
+            }
+            if (score > 25) {
+                tntY += 1;
+            }
+            if (score > 30) {
+                tntY += 1;
+            }
+
+            ctx.font = '20px Arial';
+            ctx.fillStyle = 'white';
+            ctx.fillText('SCORE: ${score}',100,40);
+
+            requestAnimationFrame(gameLoop);
+        }
+        gameLoop()
+    </script>
+</body>
+</html>
